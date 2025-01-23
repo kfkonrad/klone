@@ -17,11 +17,13 @@ function klone
 end
 
 function __klone_helper_toml_file
-  if set -q KLONE_CONFIG
-    echo "$KLONE_CONFIG"
-  else
-    echo $HOME/.config/klone.toml
-  end
+    if test -n "$KLONE_CONFIG" -a -f "$KLONE_CONFIG"
+        echo "$KLONE_CONFIG"
+    else if test -f "$HOME/.config/klone/config.toml"
+        echo "$HOME/.config/klone/config.toml"
+    else if test -f "$HOME/.config/klone.toml"
+        echo "$HOME/.config/klone.toml"
+    end
 end
 
 function __klone_helper_clone_tool
@@ -99,41 +101,42 @@ function __klone_helper_parse_toml
 
     # Clear any existing TOML variables
     __klone_helper_cleanup_vars
-
-    while read -l line
-        # Trim whitespace
-        set line (string trim $line)
-
-        # Skip empty lines and comments
-        if test -z "$line" -o (string sub -l 1 "$line") = "#"
-            continue
-        end
-
-        # Match section headers
-        if string match -qr '^\[(.*)\]$' "$line"
-            set current_section (string match -r '^\[(.*)\]$' "$line")[2]
-            continue
-        end
-
-        # Match key-value pairs
-        if string match -qr '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line"
-            set -l captures (string match -r '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line")
-            set -l key $captures[2]
-            set -l value $captures[3]
-
-            # Remove surrounding quotes if present
-            if string match -qr '^"(.*)"$' "$value"
-                set value (string match -r '^"(.*)"$' "$value")[2]
+    if test -f "$file"
+        while read -l line
+            # Trim whitespace
+            set line (string trim $line)
+  
+            # Skip empty lines and comments
+            if test -z "$line" -o (string sub -l 1 "$line") = "#"
+                continue
             end
-
-            set -l storage_key "klone_toml_"(__klone_helper_escape_key "$current_section.$key")
-            if string match -qr '^\[(.*)\]$' "$value"
-              __klone_helper_parse_array $value $storage_key
-            else
-              set -g $storage_key $value
+  
+            # Match section headers
+            if string match -qr '^\[(.*)\]$' "$line"
+                set current_section (string match -r '^\[(.*)\]$' "$line")[2]
+                continue
             end
-        end
-    end < $file
+  
+            # Match key-value pairs
+            if string match -qr '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line"
+                set -l captures (string match -r '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line")
+                set -l key $captures[2]
+                set -l value $captures[3]
+  
+                # Remove surrounding quotes if present
+                if string match -qr '^"(.*)"$' "$value"
+                    set value (string match -r '^"(.*)"$' "$value")[2]
+                end
+  
+                set -l storage_key "klone_toml_"(__klone_helper_escape_key "$current_section.$key")
+                if string match -qr '^\[(.*)\]$' "$value"
+                  __klone_helper_parse_array $value $storage_key
+                else
+                  set -g $storage_key $value
+                end
+            end
+        end < $file
+    end
 end
 
 function __klone_helper_parse_array
