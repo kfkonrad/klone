@@ -17,7 +17,7 @@ function klone
 end
 
 function __klone_helper_toml_file
-  if test -n "$KLONE_CONFIG" -a -f "$KLONE_CONFIG"
+  if set -q KLONE_CONFIG && test -f "$KLONE_CONFIG"
     echo "$KLONE_CONFIG"
   else if test -f "$HOME/.config/klone/config.toml"
     echo "$HOME/.config/klone/config.toml"
@@ -99,6 +99,7 @@ function __klone_helper_parse_toml
 
   # Clear any existing TOML variables
   __klone_helper_cleanup_vars
+
   if test -f "$file"
     while read -l line
       # Trim whitespace
