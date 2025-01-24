@@ -4,7 +4,7 @@
 
 Clone repos into the right directory in your workspace
 
-The "right" directory is a path computed by klone. It take the URL you're cloning from an turns it into a deterministic
+The "right" directory is a path computed by klone. It takes the URL you're cloning from an turns it into a deterministic
 path. E.g. `https://github.com/kfkonrad/klone` would get cloned to `~/workspace/github/kfkonrad/klone`. The exact
 behavior is configurable, see [Usage](#usage) for more.
 
@@ -45,17 +45,17 @@ examples for installing the script using `curl` and `wget` for added convenience
 Install with `curl`:
 
 ```sh
-mkdir -p ~/.config/
-curl https://raw.githubusercontent.com/kfkonrad/klone/main/bash/klone.sh -so ~/.config/klone.sh
-echo 'source ~/.config/klone.sh' >> ~/.bashrc
+mkdir -p ~/.config/klone
+curl https://raw.githubusercontent.com/kfkonrad/klone/main/bash/klone.sh -so ~/.config/klone/klone.sh
+echo 'source ~/.config/klone/klone.sh' >> ~/.bashrc
 ```
 
 Install with `wget`:
 
 ```sh
-mkdir -p ~/.config/
-wget https://raw.githubusercontent.com/kfkonrad/klone/main/bash/klone.sh -qO ~/.config/klone.sh
-echo 'source ~/.config/klone.sh' >> ~/.bashrc
+mkdir -p ~/.config/klone
+wget https://raw.githubusercontent.com/kfkonrad/klone/main/bash/klone.sh -qO ~/.config/klone/klone.sh
+echo 'source ~/.config/klone/klone.sh' >> ~/.bashrc
 ```
 
 ### ZSH
@@ -67,24 +67,24 @@ examples for installing the script using `curl` and `wget` for added convenience
 Install with `curl`:
 
 ```sh
-mkdir -p ~/.config/
-curl https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -so ~/.config/klone.sh
-echo 'source ~/.config/klone.sh' >> ~/.zshrc
+mkdir -p ~/.config/klone
+curl https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -so ~/.config/klone/klone.sh
+echo 'source ~/.config/klone/klone.sh' >> ~/.zshrc
 ```
 
 Install with `wget`:
 
 ```sh
-mkdir -p ~/.config/
-wget https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -qO ~/.config/klone.sh
-echo 'source ~/.config/klone.sh' >> ~/.zshrc
+mkdir -p ~/.config/klone
+wget https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -qO ~/.config/klone/klone.sh
+echo 'source ~/.config/klone/klone.sh' >> ~/.zshrc
 ```
 
 ## Usage
 
 To clone a repo simply run `klone <URL>`. `klone` supports SSH, git and HTTPS URLs with the same format `git` uses.
 
-`klone` is configured with a TOML file. By default it's expected to be in `~/.config/klone.toml`, though you can
+`klone` is configured with a TOML file. By default it's expected to be in `~/.config/klone/config.toml`, though you can
 override this by setting `KLONE_CONFIG`.
 
 The TOML config has three sections: `[general]`, `[domain_alias]` and `[path_replace]`.
@@ -101,7 +101,7 @@ This section has three keys and changes the behavior of `klone` for all URLs:
 
 ### `[domain_alias]`
 
-In `[domain_alias]` you can alias domains to arbitrary strings. This allows you to change the part of the reopo's path
+In `[domain_alias]` you can alias domains to arbitrary strings. This allows you to change the part of the repo's path
 that's calculated from the URL. By default this is the first part of the FQDN up until the first dot, e.g. `github.com`
 -> `github` or `foo.example.com` -> foo.
 
@@ -120,7 +120,7 @@ The format for this is `<domain> = ["replace_me", "with_this"]`.
 Do not format the array into multiple lines, the TOML parsers implemented in Bash/ZSH/Fish for this project do not have
 multi-line support.
 
-### Example `klone.toml`
+### Example `config.toml`
 
 ```toml
 [domain_alias]
@@ -139,12 +139,12 @@ is finished, the user's shell would `cd` into `~/code/foo/bar/kfkonrad/klone`.
 
 Running `klone https://gitlab.com/rluna-database/nosql/mongodb/mongo` with the config above would clone the repo into
 `~/code/gitlab/baz-database/nosql/mongodb/mongo` using
-`jj git clone --colocate https://gitlab.com/rluna-database/nosql/mongodb/mongo`. Afterwords `klone` would `cd` into
+`jj git clone --colocate https://gitlab.com/rluna-database/nosql/mongodb/mongo`. Afterwards `klone` would `cd` into
 `~/code/gitlab/baz-database/nosql/mongodb/mongo`.
 
 The `clone_command` is always run from the parent of the target directory (`~/code/foo/bar/kfkonrad/` in this case),
-since that has the broaded compatibility with other version control systems such as Subversion, Jujutsu, Mercurial etc.
-This also means the `clone_command` is run as is and only the URL is supplied as an additional argument
+since that has the broadest compatibility with other version control systems such as Subversion, Jujutsu, Mercurial etc.
+This also means the `clone_command` is run as is and only the URL is supplied as an additional argument.
 
 ## Maintainers
 
