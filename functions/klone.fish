@@ -17,19 +17,19 @@ function klone
 end
 
 function __klone_helper_toml_file
-  if set -q KLONE_CONFIG
+  if set -q KLONE_CONFIG && test -f "$KLONE_CONFIG"
     echo "$KLONE_CONFIG"
-  else
-    echo $HOME/.config/klone.toml
+  else if test -f "$HOME/.config/klone/config.toml"
+    echo "$HOME/.config/klone/config.toml"
   end
 end
 
 function __klone_helper_clone_tool
-    if set -q klone_toml_general_clone_command
-        echo "$klone_toml_general_clone_command"
-    else
-        echo git clone
-    end
+  if set -q klone_toml_general_clone_command
+    echo "$klone_toml_general_clone_command"
+  else
+    echo git clone
+  end
 end
 
 function __klone_helper_extract_full_path
@@ -81,67 +81,69 @@ end
 
 # Function to clean up environment variables when done
 function __klone_helper_cleanup_vars
-    set -l vars (set -n | string match -r "klone_toml_.*")
-    for var in $vars
-        set -e $var
-    end
+  set -l vars (set -n | string match -r "klone_toml_.*")
+  for var in $vars
+    set -e $var
+  end
 end
 
 # Function to escape special characters in keys
 function __klone_helper_escape_key
-    echo $argv[1] | sed 's/[.:-]/_/g'
+  echo $argv[1] | sed 's/[.:-]/_/g'
 end
 
 # Function to parse a TOML file
 function __klone_helper_parse_toml
-    set -l file $argv[1]
-    set -l current_section ""
+  set -l file $argv[1]
+  set -l current_section ""
 
-    # Clear any existing TOML variables
-    __klone_helper_cleanup_vars
+  # Clear any existing TOML variables
+  __klone_helper_cleanup_vars
 
+  if test -f "$file"
     while read -l line
-        # Trim whitespace
-        set line (string trim $line)
+      # Trim whitespace
+      set line (string trim $line)
 
-        # Skip empty lines and comments
-        if test -z "$line" -o (string sub -l 1 "$line") = "#"
-            continue
+      # Skip empty lines and comments
+      if test -z "$line" -o (string sub -l 1 "$line") = "#"
+        continue
+      end
+
+      # Match section headers
+      if string match -qr '^\[(.*)\]$' "$line"
+        set current_section (string match -r '^\[(.*)\]$' "$line")[2]
+        continue
+      end
+
+      # Match key-value pairs
+      if string match -qr '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line"
+        set -l captures (string match -r '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line")
+        set -l key $captures[2]
+        set -l value $captures[3]
+
+        # Remove surrounding quotes if present
+        if string match -qr '^"(.*)"$' "$value"
+          set value (string match -r '^"(.*)"$' "$value")[2]
         end
 
-        # Match section headers
-        if string match -qr '^\[(.*)\]$' "$line"
-            set current_section (string match -r '^\[(.*)\]$' "$line")[2]
-            continue
+        set -l storage_key "klone_toml_"(__klone_helper_escape_key "$current_section.$key")
+        if string match -qr '^\[(.*)\]$' "$value"
+          __klone_helper_parse_array $value $storage_key
+        else
+          set -g $storage_key $value
         end
-
-        # Match key-value pairs
-        if string match -qr '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line"
-            set -l captures (string match -r '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line")
-            set -l key $captures[2]
-            set -l value $captures[3]
-
-            # Remove surrounding quotes if present
-            if string match -qr '^"(.*)"$' "$value"
-                set value (string match -r '^"(.*)"$' "$value")[2]
-            end
-
-            set -l storage_key "klone_toml_"(__klone_helper_escape_key "$current_section.$key")
-            if string match -qr '^\[(.*)\]$' "$value"
-              __klone_helper_parse_array $value $storage_key
-            else
-              set -g $storage_key $value
-            end
-        end
+      end
     end < $file
+  end
 end
 
 function __klone_helper_parse_array
-    set -l parsed (string match -r '\[\s*"([^"]+)"\s*,\s*"([^"]+)"\s*\]' $argv[1])
-    set -l storage_key $argv[2]
+  set -l parsed (string match -r '\[\s*"([^"]+)"\s*,\s*"([^"]+)"\s*\]' $argv[1])
+  set -l storage_key $argv[2]
 
-    if test (count $parsed) -eq 3
-        set -g $storage_key"_0" $parsed[2]
-        set -g $storage_key"_1" $parsed[3]
-    end
+  if test (count $parsed) -eq 3
+    set -g $storage_key"_0" $parsed[2]
+    set -g $storage_key"_1" $parsed[3]
+  end
 end

@@ -21,10 +21,9 @@ klone() {
 
 
 __klone_helper_toml_file() {
-    if [[ -n ${KLONE_CONFIG} ]]; then
-        echo "${KLONE_CONFIG}"
-    else
-        echo $HOME/.config/klone.toml
+    local config_path="${KLONE_CONFIG:-$HOME/.config/klone/config.toml}"
+    if [[ -f ${config_path} ]]; then
+        echo "${config_path}"
     fi
 }
 
@@ -122,34 +121,36 @@ __klone_helper_parse_toml() {
     # Clear any existing TOML variables
     __klone_helper_cleanup_vars
 
-    while IFS= read -r line; do
-        # Skip empty lines and comments
-        [[ -z "$line" || "$line" =~ ^# ]] && continue
+    if [[ -f $file ]]; then
+        while IFS= read -r line; do
+            # Skip empty lines and comments
+            [[ -z "$line" || "$line" =~ ^# ]] && continue
 
-        # Match section headers
-        if [[ "$line" =~ '^\[(.*)\]$' ]]; then
-            current_section="${match[1]}"
-            continue
-        fi
-
-        # Match key-value pairs
-        if [[ "$line" =~ ^([a-zA-Z0-9_.]+)[[:space:]]*=[[:space:]]*(.*)$ ]]; then
-            local key="${match[1]}"
-            local value="${match[2]}"
-
-            # Remove surrounding quotes if present
-            if [[ "$value" =~ ^\"(.*)\"$ ]]; then
-                value="${match[1]}"
+            # Match section headers
+            if [[ "$line" =~ ^\[(.*)\]$ ]]; then
+                current_section="${BASH_REMATCH[1]}"
+                continue
             fi
 
-            local storage_key="klone_toml_$(__klone_helper_escape_key "${current_section}.${key}")"
-            if [[ "$value" =~ '^\[(.*)\]$' ]]; then
-                __klone_helper_parse_array "$value" "$storage_key"
-            else
-                export "$storage_key=$value"
+            # Match key-value pairs
+            if [[ "$line" =~ ^([a-zA-Z0-9_.]+)[[:space:]]*=[[:space:]]*(.*)$ ]]; then
+                local key="${BASH_REMATCH[1]}"
+                local value="${BASH_REMATCH[2]}"
+
+                # Remove surrounding quotes if present
+                if [[ "$value" =~ ^\"(.*)\"$ ]]; then
+                    value="${BASH_REMATCH[1]}"
+                fi
+
+                local storage_key="klone_toml_$(__klone_helper_escape_key "${current_section}.${key}")"
+                if [[ "$value" =~ ^\[(.*)\]$ ]]; then
+                    __klone_helper_parse_array "$value" "$storage_key"
+                else
+                    export "$storage_key=$value"
+                fi
             fi
-        fi
-    done < "$file"
+        done < "$file"
+    fi
 }
 
 # Function to parse array values
