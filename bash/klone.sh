@@ -23,8 +23,6 @@ __klone_helper_toml_file() {
     local config_path="${KLONE_CONFIG:-$HOME/.config/klone/config.toml}"
     if [[ -f ${config_path} ]]; then
         echo "${config_path}"
-    elif [[ -f $HOME/.config/klone.toml ]]; then
-        echo $HOME/.config/klone.toml
     fi
 }
 

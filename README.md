@@ -4,7 +4,7 @@
 
 Clone repos into the right directory in your workspace
 
-The "right" directory is a path computed by klone. It takes the URL you're cloning from an turns it into a deterministic
+The "right" directory is a path computed by klone. It takes the URL you're cloning from and turns it into a deterministic
 path. E.g. `https://github.com/kfkonrad/klone` would get cloned to `~/workspace/github/kfkonrad/klone`. The exact
 behavior is configurable, see [Usage](#usage) for more.
 
