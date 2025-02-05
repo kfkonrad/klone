@@ -78,7 +78,7 @@ __klone_helper_extract_full_path_generic() {
     local filtered_path="$unfiltered_path"
     local path_replace_0_var="klone_toml_path_replace_${fish_friendly_fqdn}_0"
     local path_replace_1_var="klone_toml_path_replace_${fish_friendly_fqdn}_1"
-
+    
     if [[ -n ${(P)path_replace_0_var+x} ]] && [[ -n ${(P)path_replace_1_var+x} ]]; then
         filtered_path=${unfiltered_path//${(P)path_replace_0_var}/${(P)path_replace_1_var}}
     fi
@@ -124,26 +124,26 @@ __klone_helper_parse_toml() {
     if [[ -f $file ]]; then
         while IFS= read -r line; do
             # Skip empty lines and comments
-            [[ -z "$line" || "$line" =~ ^# ]] && continue
+            [[ -z "$line" || "$line" =~ '^#' ]] && continue
 
             # Match section headers
-            if [[ "$line" =~ ^\[(.*)\]$ ]]; then
-                current_section="${BASH_REMATCH[1]}"
+            if [[ "$line" =~ '^\[(.*)\]$' ]]; then
+                current_section="${match[1]}"
                 continue
             fi
 
             # Match key-value pairs
-            if [[ "$line" =~ ^([a-zA-Z0-9_.]+)[[:space:]]*=[[:space:]]*(.*)$ ]]; then
-                local key="${BASH_REMATCH[1]}"
-                local value="${BASH_REMATCH[2]}"
+            if [[ "$line" =~ '^([a-zA-Z0-9_.]+)[[:space:]]*=[[:space:]]*(.*)$' ]]; then
+                local key="${match[1]}"
+                local value="${match[2]}"
 
                 # Remove surrounding quotes if present
-                if [[ "$value" =~ ^\"(.*)\"$ ]]; then
-                    value="${BASH_REMATCH[1]}"
+                if [[ "$value" =~ '^\"(.*)\"$' ]]; then
+                    value="${match[1]}"
                 fi
 
                 local storage_key="klone_toml_$(__klone_helper_escape_key "${current_section}.${key}")"
-                if [[ "$value" =~ ^\[(.*)\]$ ]]; then
+                if [[ "$value" =~ '^\[(.*)\]$' ]]; then
                     __klone_helper_parse_array "$value" "$storage_key"
                 else
                     export "$storage_key=$value"

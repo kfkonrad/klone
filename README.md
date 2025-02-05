@@ -112,9 +112,6 @@ The format for this is `<domain> = "my-alias"`.
 With `[path_replace]` you can replace parts of the URL path (which by default is taken as is, only a trailing `.git`
 gets removed if present). This also supports regexes.
 
-Note that with the Bash and ZSH implementations any slashes need to be escaped once, since they use `sed` internally.
-The fish version has no such restriction.
-
 The format for this is `<domain> = ["replace_me", "with_this"]`.
 
 Do not format the array into multiple lines, the TOML parsers implemented in Bash/ZSH/Fish for this project do not have
