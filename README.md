@@ -97,7 +97,7 @@ This section has three keys and changes the behavior of `klone` for all URLs:
 |------------------|----------------------------------------------------------------|---------------|
 | `base_dir`       | Set the base workspace directory all repos will be cloned into | `~/workspace` |
 | `cd_after_clone` | `cd` into the newly cloned repo                                | `false`       |
-| `clone command`  | Set the command used for cloning repos                         | `git clone`   |
+| `clone_command`  | Set the command used for cloning repos                         | `git clone`   |
 
 ### `[domain_alias]`
 
