@@ -78,7 +78,7 @@ __klone_helper_extract_full_path_generic() {
     local filtered_path="$unfiltered_path"
     local path_replace_0_var="klone_toml_path_replace_${fish_friendly_fqdn}_0"
     local path_replace_1_var="klone_toml_path_replace_${fish_friendly_fqdn}_1"
-    
+
     if [[ -n ${(P)path_replace_0_var+x} ]] && [[ -n ${(P)path_replace_1_var+x} ]]; then
         filtered_path=${unfiltered_path//${(P)path_replace_0_var}/${(P)path_replace_1_var}}
     fi
@@ -133,7 +133,7 @@ __klone_helper_parse_toml() {
             fi
 
             # Match key-value pairs
-            if [[ "$line" =~ '^([a-zA-Z0-9_.]+)[[:space:]]*=[[:space:]]*(.*)$' ]]; then
+            if [[ "$line" =~ '^([a-zA-Z0-9_.-]+)[[:space:]]*=[[:space:]]*(.*)$' ]]; then
                 local key="${match[1]}"
                 local value="${match[2]}"
 

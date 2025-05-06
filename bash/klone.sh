@@ -130,7 +130,7 @@ __klone_helper_parse_toml() {
             fi
 
             # Match key-value pairs
-            if [[ "$line" =~ ^([a-zA-Z0-9_.]+)[[:space:]]*=[[:space:]]*(.*)$ ]]; then
+            if [[ "$line" =~ ^([a-zA-Z0-9_.-]+)[[:space:]]*=[[:space:]]*(.*)$ ]]; then
                 local key="${BASH_REMATCH[1]}"
                 local value="${BASH_REMATCH[2]}"
 

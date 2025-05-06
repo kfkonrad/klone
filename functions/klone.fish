@@ -117,7 +117,7 @@ function __klone_helper_parse_toml
       end
 
       # Match key-value pairs
-      if string match -qr '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line"
+      if string match -qr '^([a-zA-Z0-9_.-]+)\s*=\s*(.*)$' "$line"
         set -l captures (string match -r '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line")
         set -l key $captures[2]
         set -l value $captures[3]
