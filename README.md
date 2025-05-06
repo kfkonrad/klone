@@ -18,7 +18,7 @@ behavior is configurable, see [Usage](#usage) for more.
 
 ## Install
 
-There are three implementations of `klone` with an identical feature set for Fish, Bash and ZSH.
+There are three implementations of `klone` with an identical feature set for Fish, Bash, ZSH and Nushell.
 
 ### Fish
 
@@ -80,6 +80,28 @@ wget https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -qO ~/.c
 echo 'source ~/.config/klone/klone.sh' >> ~/.zshrc
 ```
 
+### Nushell
+
+To install `klone` you can download
+[nushell/klone.sh](https://github.com/kfkonrad/klone/blob/main/nushell/klone.sh) and source it in your `config.nu`.
+Below are examples for installing the script using `curl` and `wget` for added convenience:
+
+Install with `curl`:
+
+```sh
+mkdir ~/.config/klone
+curl https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -so ~/.config/klone/klone.nu
+"\nsource ~/.config/klone/klone.nu\n" o>> $nu.config-path
+```
+
+Install with `wget`:
+
+```sh
+mkdir ~/.config/klone
+wget https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -qO ~/.config/klone/klone.nu
+"\nsource ~/.config/klone/klone.nu\n" o>> $nu.config-path
+```
+
 ## Usage
 
 To clone a repo simply run `klone <URL>`. `klone` supports SSH, git and HTTPS URLs with the same format `git` uses.
@@ -115,7 +137,8 @@ gets removed if present). This also supports regexes.
 The format for this is `<domain> = ["replace_me", "with_this"]`.
 
 Do not format the array into multiple lines, the TOML parsers implemented in Bash/ZSH/Fish for this project do not have
-multi-line support.
+multi-line support. The Nushell implementation uses Nu's built-in TOML parsing capabilities and will support multi-line
+values.
 
 ### Example `config.toml`
 
