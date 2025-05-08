@@ -90,7 +90,7 @@ Install with `curl`:
 
 ```sh
 mkdir ~/.config/klone
-curl https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -so ~/.config/klone/klone.nu
+curl https://raw.githubusercontent.com/kfkonrad/klone/main/nushell/klone.nu -so ~/.config/klone/klone.nu
 "\nsource ~/.config/klone/klone.nu\n" o>> $nu.config-path
 ```
 
@@ -98,7 +98,7 @@ Install with `wget`:
 
 ```sh
 mkdir ~/.config/klone
-wget https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -qO ~/.config/klone/klone.nu
+wget https://raw.githubusercontent.com/kfkonrad/klone/main/nushell/klone.nu -qO ~/.config/klone/klone.nu
 "\nsource ~/.config/klone/klone.nu\n" o>> $nu.config-path
 ```
 
