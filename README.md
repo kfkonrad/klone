@@ -18,7 +18,7 @@ behavior is configurable, see [Usage](#usage) for more.
 
 ## Install
 
-There are three implementations of `klone` with an identical feature set for Fish, Bash, ZSH and Nushell.
+There are four implementations of `klone` with an identical feature set for Fish, Bash, ZSH and Nushell.
 
 ### Fish
 
