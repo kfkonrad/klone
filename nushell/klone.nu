@@ -55,7 +55,7 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
     let fqdn = $url | str replace -r "/.*" ""
     let nu_friendly_fqdn = $fqdn | str replace -a ":" "." | str replace -a "-" "." | split row '.' | into cell-path
 
-    let domain_var = $klone_config.domain_alias | get -i ($nu_friendly_fqdn)
+    let domain_var = $klone_config.domain_alias? | get -i $nu_friendly_fqdn
     let domain = if $domain_var != null {
         $domain_var
     } else {
@@ -64,7 +64,7 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
 
     let unfiltered_path = $url | str replace -r "[^/]*/" ""
 
-    let path_filter = $klone_config.path_replace | get -i ($nu_friendly_fqdn)
+    let path_filter = $klone_config.path_replace? | get -i $nu_friendly_fqdn
 
     let filtered_path = if ($path_filter.0?) != null and ($path_filter.1?) != null {
         $unfiltered_path | str replace -a $path_filter.0 $path_filter.1
