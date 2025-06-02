@@ -106,6 +106,9 @@ wget https://raw.githubusercontent.com/kfkonrad/klone/main/nushell/klone.nu -qO 
 
 To clone a repo simply run `klone <URL>`. `klone` supports SSH, git and HTTPS URLs with the same format `git` uses.
 
+You can also run `klone --dry-run <URL>` or `klone -n <URL>` to see where and with which command klone would clone your
+repo to without actually cloning it. The `--dry-run`/`-n` flag may come before or after the URL.
+
 `klone` is configured with a TOML file. By default it's expected to be in `~/.config/klone/config.toml`, though you can
 override this by setting `KLONE_CONFIG`.
 

@@ -1,5 +1,15 @@
-def --env klone [url: string] {
+def --env klone [url: string, --dry_run (-n)] {
     let $klone_config: record = open (klone_helper_toml_file)
+    if $dry_run {
+        let clone_command = if ($klone_config.general.clone_command? != null) {
+            $klone_config.general.clone_command
+        } else {
+            "git clone"
+        }
+        print $"dry run: would clone repo to (klone_helper_extract_full_path $url $klone_config)"
+        print $"dry run: would clone repo using ($clone_command) ($url)"
+        return
+    }
 
     let fullpath = klone_helper_extract_full_path $url $klone_config
     mkdir ($fullpath)

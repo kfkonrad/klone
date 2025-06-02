@@ -1,9 +1,20 @@
 #!/usr/bin/env bash
 
 klone() {
+    __klone_helper_parse_toml $(__klone_helper_toml_file)
+    if [ "x$1" = "x--dry-run" -o "x$1" = "x-n" ]; then
+        echo dry run: would clone repo to $(__klone_helper_extract_full_path "$2")
+        echo dry run: would clone repo using $(__klone_helper_clone_tool) $2
+        return 0
+    fi
+    if [ "x$2" = "x--dry-run" -o "x$2" = "x-n" ]; then
+        echo dry run: would clone repo to $(__klone_helper_extract_full_path "$1")
+        echo dry run: would clone repo using $(__klone_helper_clone_tool) $1
+        return 0
+    fi
+
     local url="$1"
     local fullpath
-    __klone_helper_parse_toml $(__klone_helper_toml_file)
 
     fullpath=$(__klone_helper_extract_full_path "$url")
     mkdir -p $fullpath

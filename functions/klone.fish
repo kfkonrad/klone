@@ -1,6 +1,17 @@
 function klone
-  set url $argv[1]
   __klone_helper_parse_toml (__klone_helper_toml_file)
+  if test "x$argv[1]" = "x--dry-run" -o "x$argv[1]" = "x-n"
+    echo dry run: would clone repo to (__klone_helper_extract_full_path "$argv[2]")
+    echo dry run: would clone repo using (__klone_helper_clone_tool) $argv[2]
+    return 0
+  end
+  if test "x$argv[2]" = "x--dry-run" -o "x$argv[2]" = "x-n"
+    echo dry run: would clone repo to (__klone_helper_extract_full_path "$argv[1]")
+    echo dry run: would clone repo using (__klone_helper_clone_tool) $argv[1]
+    return 0
+  end
+
+  set url $argv[1]
 
   set fullpath (__klone_helper_extract_full_path "$url")
   mkdir -p $fullpath
@@ -118,7 +129,7 @@ function __klone_helper_parse_toml
 
       # Match key-value pairs
       if string match -qr '^([a-zA-Z0-9_.-]+)\s*=\s*(.*)$' "$line"
-        set -l captures (string match -r '^([a-zA-Z0-9_.]+)\s*=\s*(.*)$' "$line")
+        set -l captures (string match -r '^([a-zA-Z0-9_.-]+)\s*=\s*(.*)$' "$line")
         set -l key $captures[2]
         set -l value $captures[3]
 
