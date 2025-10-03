@@ -2,21 +2,30 @@
 
 klone() {
     __klone_helper_parse_toml $(__klone_helper_toml_file)
-    if [ "x$1" = "x--dry-run" -o "x$1" = "x-n" ]; then
-        echo dry run: would clone repo to $(__klone_helper_extract_full_path "$2")
-        echo dry run: would clone repo using $(__klone_helper_clone_tool) $2
-        return 0
-    fi
-    if [ "x$2" = "x--dry-run" -o "x$2" = "x-n" ]; then
-        echo dry run: would clone repo to $(__klone_helper_extract_full_path "$1")
-        echo dry run: would clone repo using $(__klone_helper_clone_tool) $1
-        return 0
-    fi
 
+    local dry_run=false
     local url="$1"
-    local fullpath
+    if [ "x$1" = "x--dry-run" -o "x$1" = "x-n" ]; then
+        dry_run=true
+        url="$2"
+    elif [ "x$2" = "x--dry-run" -o "x$2" = "x-n" ]; then
+        dry_run=true
+    fi
 
-    fullpath=$(__klone_helper_extract_full_path "$url")
+    if [ -z "$url" ]; then
+        echo "Error: Missing URL argument." >&2
+        return 1
+    fi
+
+    local fullpath
+    fullpath=$(__klone_helper_extract_full_path "$url") || return 1
+
+    if [ "$dry_run" = true ]; then
+        echo dry run: would clone repo to $fullpath
+        echo dry run: would clone repo using $(__klone_helper_clone_tool) $url
+        return 0
+    fi
+
     mkdir -p $fullpath
 
     pushd $(dirname $fullpath) >/dev/null
@@ -46,6 +55,12 @@ __klone_helper_clone_tool() {
 }
 
 __klone_helper_extract_full_path() {
+    # Validate URL schema
+    if ! echo "$1" | grep -qE "^(git@|ssh://git@|https://)"; then
+        echo "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported." >&2
+        return 1
+    fi
+
     if echo "$1" | grep -qE "^git@|^ssh://git@"; then
         __klone_helper_extract_full_path_ssh "$1"
     else

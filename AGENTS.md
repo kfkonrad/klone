@@ -61,12 +61,13 @@ Tests run in GitHub Actions on push/PR to main branch.
 
 When modifying any implementation:
 
-1. **Maintain feature parity** - All 4 implementations must have identical behavior
-2. **URL scheme support** - Handle `git@...`, `ssh://git@...`, and `https://...`
-3. **Clone tool flexibility** - Clone command runs from parent directory of target path
-4. **Helper naming** - All helper functions prefixed with `__klone_helper_` or `klone_helper_`
-5. **Variable cleanup** - Shell implementations must clean up TOML vars (prefix `klone_toml_`)
-6. **Dry-run flag position** - Support `--dry-run`/`-n` before or after URL
+1. **Start with Fish** - Always implement changes in Fish first (`functions/klone.fish`), then use it as a reference for Bash, ZSH, and Nushell
+2. **Maintain feature parity** - All 4 implementations must have identical behavior
+3. **URL scheme support** - Handle `git@...`, `ssh://git@...`, and `https://...`
+4. **Clone tool flexibility** - Clone command runs from parent directory of target path
+5. **Helper naming** - All helper functions prefixed with `__klone_helper_` or `klone_helper_`
+6. **Variable cleanup** - Shell implementations must clean up TOML vars (prefix `klone_toml_`)
+7. **Dry-run flag position** - Support `--dry-run`/`-n` before or after URL
 
 ### TOML Parsing Constraints
 

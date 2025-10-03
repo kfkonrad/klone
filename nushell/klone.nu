@@ -44,6 +44,11 @@ def klone_helper_clone_tool [url: string klone_config: record] {
 }
 
 def klone_helper_extract_full_path [url: string klone_config: record] {
+    # Validate URL schema
+    if not (($url | str starts-with "git@") or ($url | str starts-with "ssh://git@") or ($url | str starts-with "https://")) {
+        error make {msg: "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported."}
+    }
+
     if ($url | str starts-with "git@") or ($url | str starts-with "ssh://git@") {
         klone_helper_extract_full_path_ssh $url $klone_config
     } else {
