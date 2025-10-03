@@ -100,6 +100,15 @@ TEST_CASES = [
     ("klone --dry-run https://GitHub.COM/user/repo", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # Mixed case domain
     ("klone --dry-run https://gitlab.com/org/team/subteam/project/subproject/repo", "would clone repo to /root/workspace/gitlab/org/team/subteam/project/subproject/repo", "", 0, "config-default.toml"),  # Deep path
     ("klone --dry-run https://example.com/remove-this/repo", "would clone repo to /root/workspace/example/repo", "", 0, "config-empty-replace.toml"),  # Path replace with empty string
+
+    # Security and encoding edge cases
+    ("klone --dry-run https://github.com/user/../../../etc/passwd", "", "Error: URL must not contain parent directory references (..).", 1, "config-default.toml"),  # Path traversal
+    ("klone --dry-run git@github.com:org/../other/repo.git", "", "Error: URL must not contain parent directory references (..).", 1, "config-default.toml"),  # Path traversal SSH
+    ("klone --dry-run https://github.com/user/repo/../other", "", "Error: URL must not contain parent directory references (..).", 1, "config-default.toml"),  # Path traversal mid-path
+    ("klone --dry-run https://github.com/user/repo/..", "", "Error: URL must not contain parent directory references (..).", 1, "config-default.toml"),  # Path traversal end of path
+    ("klone --dry-run https://github.com/user/repo/../", "", "Error: URL must not contain parent directory references (..).", 1, "config-default.toml"),  # Path traversal end of path with trailing /
+    ("klone --dry-run https://github.com/用户/repo", "would clone repo to /root/workspace/github/用户/repo", "", 0, "config-default.toml"),  # Unicode in path
+    ("klone --dry-run https://github.com/user/📦repo", "would clone repo to /root/workspace/github/user/📦repo", "", 0, "config-default.toml"),  # Emoji in path
 ]
 
 def run_in_shell(shell, command, config_file):

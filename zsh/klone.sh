@@ -102,10 +102,15 @@ __klone_helper_extract_full_path_generic() {
     fi
 
     local unfiltered_path
-    unfiltered_path=$(echo "${1#*/}" | sed 's|/\+|/|g')
+    unfiltered_path=$(echo "${1#*/}" | sed 's|//*|/|g;s|^/||')
 
     if [ -z "$unfiltered_path" ] || [ "$unfiltered_path" = "$fqdn" ]; then
         echo "Error: URL missing repository path." >&2
+        return 1
+    fi
+
+    if echo "$unfiltered_path" | grep -qE '(^|/)\.\.(/|$)'; then
+        echo "Error: URL must not contain parent directory references (..)." >&2
         return 1
     fi
 

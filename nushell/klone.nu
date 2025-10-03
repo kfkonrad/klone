@@ -82,10 +82,14 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
         $fqdn | str replace -r "[.][^.]*$" ""
     }
 
-    let unfiltered_path = $url | str replace -r "[^/]*/" "" | str replace -ar "/+" "/"
+    let unfiltered_path = $url | str replace -r "[^/]*/" "" | str replace -ar "/+" "/" | str replace -r "^/" ""
 
     if ($unfiltered_path | is-empty) or ($unfiltered_path == $fqdn) {
         error make {msg: "Error: URL missing repository path."}
+    }
+
+    if ($unfiltered_path =~ '(^|/)\.\.(/|$)') {
+        error make {msg: "Error: URL must not contain parent directory references (..)."}
     }
 
     let path_filter = $klone_config.path_replace? | get -o $nu_friendly_fqdn

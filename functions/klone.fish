@@ -91,10 +91,15 @@ function __klone_helper_extract_full_path_generic
     set domain (echo $fqdn | sed 's|\.[^.]*$||')
   end
 
-  set unfiltered_path (echo $argv[1] | sed 's|[^/]*/||;s|/\+|/|g')
+  set unfiltered_path (echo $argv[1] | sed 's|[^/]*/||;s|//*|/|g;s|^/||')
 
   if test -z "$unfiltered_path" -o "$unfiltered_path" = "$fqdn"
     echo "Error: URL missing repository path." >&2
+    return 1
+  end
+
+  if echo "$unfiltered_path" | grep -qE '(^|/)\.\.(/|$)'
+    echo "Error: URL must not contain parent directory references (..)." >&2
     return 1
   end
   if set -q klone_toml_path_replace_$fish_friendly_fqdn"_0" && set -q klone_toml_path_replace_$fish_friendly_fqdn"_1"
