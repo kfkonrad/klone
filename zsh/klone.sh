@@ -166,7 +166,7 @@ __klone_helper_parse_toml() {
 
 # Function to parse array values
 __klone_helper_parse_array() {
-    if [[ $1 =~ \[[[:space:]]*\"([^\"]+)\"[[:space:]]*,[[:space:]]*\"([^\"]+)\"[[:space:]]*\] ]]; then
+    if [[ $1 =~ \[[[:space:]]*\"([^\"]*)\"[[:space:]]*,[[:space:]]*\"([^\"]*)\"[[:space:]]*\] ]]; then
         local storage_key="$2"
         export "${storage_key}_0=${match[1]}"
         export "${storage_key}_1=${match[2]}"

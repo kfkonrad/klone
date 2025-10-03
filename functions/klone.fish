@@ -150,7 +150,7 @@ function __klone_helper_parse_toml
 end
 
 function __klone_helper_parse_array
-  set -l parsed (string match -r '\[\s*"([^"]+)"\s*,\s*"([^"]+)"\s*\]' $argv[1])
+  set -l parsed (string match -r '\[\s*"([^"]*)"\s*,\s*"([^"]*)"\s*\]' $argv[1])
   set -l storage_key $argv[2]
 
   if test (count $parsed) -eq 3

@@ -12,6 +12,7 @@ behavior is configurable, see [Usage](#usage) for more.
 
 - [Install](#install)
 - [Usage](#usage)
+- [Testing](#testing)
 - [Maintainers](#maintainers)
 - [Contributing](#contributing)
 - [License](#license)
@@ -168,6 +169,27 @@ Running `klone https://gitlab.com/rluna-database/nosql/mongodb/mongo` with the c
 The `clone_command` is always run from the parent of the target directory (`~/code/foo/bar/kfkonrad/` in this case),
 since that has the broadest compatibility with other version control systems such as Subversion, Jujutsu, Mercurial etc.
 This also means the `clone_command` is run as is and only the URL is supplied as an additional argument.
+
+## Testing
+
+The test suite validates `klone` functionality across all supported shells (Bash, ZSH, Fish, Nushell) using Docker
+containers and pytest.
+
+### Requirements
+
+- Bash
+- Docker
+- Python 3
+
+### Running Tests
+
+```sh
+cd tests
+./test.sh
+```
+
+The test script automatically sets up Docker containers for each shell, creates test config files, installs dependencies
+in a venv, runs the full test suite and cleans up the containers, config files and venv.
 
 ## Maintainers
 

@@ -1,7 +1,7 @@
-def --env klone [url: string, --dry_run (-n)] {
+def --env klone [url: string, --dry-run (-n)] {
     let $klone_config: record = open (klone_helper_toml_file)
     if $dry_run {
-        let clone_command = if ($klone_config.general.clone_command? != null) {
+        let clone_command = if ($klone_config.general?.clone_command? != null) {
             $klone_config.general.clone_command
         } else {
             "git clone"
@@ -74,7 +74,7 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
 
     let unfiltered_path = $url | str replace -r "[^/]*/" ""
 
-    let path_filter = $klone_config.path_replace? | get -i $nu_friendly_fqdn
+    let path_filter = $klone_config.path_replace? | get -o $nu_friendly_fqdn
 
     let filtered_path = if ($path_filter.0?) != null and ($path_filter.1?) != null {
         $unfiltered_path | str replace -a $path_filter.0 $path_filter.1
@@ -82,8 +82,8 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
         $unfiltered_path
     }
 
-    let base_dir = if ($klone_config.general_base_dir? != null) {
-        $klone_config.general_base_dir | str replace -r "^~/" $"($nu.home-path)/"
+    let base_dir = if ($klone_config.general?.base_dir? != null) {
+        $klone_config.general.base_dir | str replace -r "^~/" $"($nu.home-path)/"
     } else {
         $"($nu.home-path)/workspace"
     }

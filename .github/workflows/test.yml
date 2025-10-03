@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Run tests
+      working-directory: tests
+      env:
+        DOCKER_USER_ARGS: "-u 0:0"
+      run: bash test.sh
+
+    - name: Clean up containers
+      if: always()
+      run: |
+        docker ps -aq --filter "name=klone-" | xargs -r docker rm -f
