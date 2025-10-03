@@ -105,7 +105,7 @@ function __klone_helper_extract_full_path_generic
   if set -q klone_toml_path_replace_$fish_friendly_fqdn"_0" && set -q klone_toml_path_replace_$fish_friendly_fqdn"_1"
     set path_filter_0 (eval echo \$klone_toml_path_replace'_'$fish_friendly_fqdn"_0")
     set path_filter_1 (eval echo \$klone_toml_path_replace'_'$fish_friendly_fqdn"_1")
-    set filtered_path (echo $unfiltered_path | string replace -ra "$path_filter_0" "$path_filter_1")
+    set filtered_path (echo $unfiltered_path | sed (printf 's\a%s\a%s\ag' "$path_filter_0" "$path_filter_1"))
   else
     set filtered_path $unfiltered_path
   end

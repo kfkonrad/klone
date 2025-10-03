@@ -119,7 +119,7 @@ __klone_helper_extract_full_path_generic() {
     local path_replace_1_var="klone_toml_path_replace_${fish_friendly_fqdn}_1"
 
     if [[ -n ${(P)path_replace_0_var+x} ]] && [[ -n ${(P)path_replace_1_var+x} ]]; then
-        filtered_path=${unfiltered_path//${(P)path_replace_0_var}/${(P)path_replace_1_var}}
+        filtered_path=$(echo "$unfiltered_path" | sed "$(printf 's\a%s\a%s\ag' "${(P)path_replace_0_var}" "${(P)path_replace_1_var}")")
     fi
 
     local base_dir

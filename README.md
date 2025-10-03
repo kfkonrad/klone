@@ -147,6 +147,9 @@ gets removed if present). This also supports regexes.
 
 The format for this is `<domain> = ["replace_me", "with_this"]`.
 
+**Note:** Invalid regex patterns in `path_replace` may cause runtime errors. Test your patterns to ensure they work
+correctly.
+
 Do not format the array into multiple lines, the TOML parsers implemented in Bash/ZSH/Fish for this project do not have
 multi-line support. The Nushell implementation uses Nu's built-in TOML parsing capabilities and will support multi-line
 values.

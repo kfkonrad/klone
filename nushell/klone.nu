@@ -95,7 +95,7 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
     let path_filter = $klone_config.path_replace? | get -o $nu_friendly_fqdn
 
     let filtered_path = if ($path_filter.0?) != null and ($path_filter.1?) != null {
-        $unfiltered_path | str replace -a $path_filter.0 $path_filter.1
+        echo $unfiltered_path | ^sed $"s(char bel)($path_filter.0)(char bel)($path_filter.1)(char bel)g" | str trim
     } else {
         $unfiltered_path
     }
