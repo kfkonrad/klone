@@ -72,7 +72,7 @@ TEST_CASES = [
     ("klone --dry-run ftp://github.com/user/repo", "", "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported.", 1, "config-default.toml"),
     ("klone --dry-run http://github.com/user/repo", "", "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported.", 1, "config-default.toml"),
 
-    # Edge cases that might trigger bugs
+    # Assorted edge cases
     ("klone --dry-run https://github.com/user/repo/", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # Trailing slash
     ("klone --dry-run git@github.com:user/repo", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # No .git suffix
     ("klone --dry-run https://github.com/user/repo-with-dashes", "would clone repo to /root/workspace/github/user/repo-with-dashes", "", 0, "config-default.toml"),  # Dashes in name
@@ -84,6 +84,18 @@ TEST_CASES = [
     ("klone --dry-run https://", "", "Error: URL missing repository path.", 1, "config-default.toml"),  # Incomplete HTTPS URL
     ("klone --dry-run", "", "Error: Missing URL argument.", 1, "config-default.toml"),  # Missing URL
     ("klone --dry-run https://github.com", "", "Error: URL missing repository path.", 1, "config-default.toml"),  # Missing path
+
+    # Rarer URL formats
+    ("klone --dry-run https://git.company.com:8443/user/repo", "would clone repo to /root/workspace/git.company/user/repo", "", 0, "config-default.toml"),  # HTTPS with port
+    ("klone --dry-run ssh://git@github.com:22/user/repo.git", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # SSH with port
+    ("klone --dry-run git@github.com:22:user/repo.git", "", "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported.", 1, "config-default.toml"),  # git@ with port (invalid format)
+    ("klone --dry-run https://user@github.com/user/repo", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # Username in HTTPS URL
+    ("klone --dry-run 'https://github.com/user/repo?foo=bar'", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # Query parameters
+    ("klone --dry-run 'https://github.com/user/repo#readme'", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # Fragment
+    ("klone --dry-run 'https://github.com/user/repo?foo=bar#readme'", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # Query and fragment
+    ("klone --dry-run https://git123.company456.com/user/repo", "would clone repo to /root/workspace/git123.company456/user/repo", "", 0, "config-default.toml"),  # Numbers in domain
+    ("klone --dry-run https://github.com/user/repo.backup", "would clone repo to /root/workspace/github/user/repo.backup", "", 0, "config-default.toml"),  # Path with dot (not .git)
+    ("klone --dry-run https://github.com/user/repo.v2.git", "would clone repo to /root/workspace/github/user/repo.v2", "", 0, "config-default.toml"),  # Multiple dots in path
 ]
 
 def run_in_shell(shell, command, config_file):

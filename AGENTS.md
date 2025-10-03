@@ -45,8 +45,10 @@ Run the automated test suite:
 
 ```bash
 cd tests
-./test.sh
+./test.sh > test.log 2>&1
 ```
+
+The test output is captured in `tests/test.log` for analysis. This file is gitignored.
 
 The test suite uses Docker containers for each shell (Bash 5.3.3, ZSH 5.9, Fish 4.0.2, Nushell 0.106.1) and pytest to validate:
 - URL parsing (HTTPS, SSH, git://)

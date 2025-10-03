@@ -61,6 +61,12 @@ __klone_helper_extract_full_path() {
         return 1
     fi
 
+    # Reject invalid git@host:port:path format (SCP-like syntax doesn't support ports)
+    if echo "$1" | grep -qE "^git@[^:]+:[0-9]+:"; then
+        echo "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported." >&2
+        return 1
+    fi
+
     if echo "$1" | grep -qE "^git@|^ssh://git@"; then
         __klone_helper_extract_full_path_ssh "$1"
     else
@@ -70,13 +76,13 @@ __klone_helper_extract_full_path() {
 
 __klone_helper_extract_full_path_ssh() {
     local schemaless
-    schemaless=$(echo "$1" | sed 's/.*@//;s|:|/|;s|\.git$||')
+    schemaless=$(echo "$1" | sed 's/.*@//;s|:[0-9][0-9]*/|/|;s|:|/|;s|\.git$||')
     __klone_helper_extract_full_path_generic "$schemaless"
 }
 
 __klone_helper_extract_full_path_https() {
     local schemaless
-    schemaless=$(echo "$1" | sed 's|^https://||;s|\.git$||')
+    schemaless=$(echo "$1" | sed 's|^https://||;s|^[^@]*@||;s|:[0-9][0-9]*/|/|;s|?.*$||;s|#.*$||;s|\.git$||')
     __klone_helper_extract_full_path_generic "$schemaless"
 }
 

@@ -49,6 +49,11 @@ def klone_helper_extract_full_path [url: string klone_config: record] {
         error make {msg: "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported."}
     }
 
+    # Reject invalid git@host:port:path format (SCP-like syntax doesn't support ports)
+    if ($url =~ '^git@[^:]+:[0-9]+:') {
+        error make {msg: "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported."}
+    }
+
     if ($url | str starts-with "git@") or ($url | str starts-with "ssh://git@") {
         klone_helper_extract_full_path_ssh $url $klone_config
     } else {
@@ -57,12 +62,12 @@ def klone_helper_extract_full_path [url: string klone_config: record] {
 }
 
 def klone_helper_extract_full_path_ssh [url: string klone_config: record] {
-    let schemaless = $url | str replace -r ".*@" "" | str replace -r ":" "/" | str replace -r "[.]git$" ""
+    let schemaless = $url | str replace -r ".*@" "" | str replace -r ":[0-9]+/" "/" | str replace -r ":" "/" | str replace -r "[.]git$" ""
     klone_helper_extract_full_path_generic $schemaless $klone_config
 }
 
 def klone_helper_extract_full_path_https [url: string klone_config: record] {
-    let schemaless = $url | str replace -r "^https://" "" | str replace -r "[.]git$" ""
+    let schemaless = $url | str replace -r "^https://" "" | str replace -r "^[^@]*@" "" | str replace -r ":[0-9]+/" "/" | str replace -r "[?].*$" "" | str replace -r "#.*$" "" | str replace -r "[.]git$" ""
     klone_helper_extract_full_path_generic $schemaless $klone_config
 }
 
