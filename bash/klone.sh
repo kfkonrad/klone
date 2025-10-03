@@ -88,7 +88,7 @@ __klone_helper_extract_full_path_https() {
 
 __klone_helper_extract_full_path_generic() {
     local fqdn
-    fqdn=$(echo "$1" | sed 's|/.*||')
+    fqdn=$(echo "$1" | sed 's|/.*||' | tr '[:upper:]' '[:lower:]')
     local fish_friendly_fqdn
     fish_friendly_fqdn=$(echo "$fqdn" | sed 's/[.:-]/_/g')
 
@@ -101,7 +101,7 @@ __klone_helper_extract_full_path_generic() {
     fi
 
     local unfiltered_path
-    unfiltered_path=$(echo "$1" | sed 's|[^/]*/||')
+    unfiltered_path=$(echo "$1" | sed 's|[^/]*/||;s|/\+|/|g')
 
     if [ -z "$unfiltered_path" ] || [ "$unfiltered_path" = "$fqdn" ]; then
         echo "Error: URL missing repository path." >&2

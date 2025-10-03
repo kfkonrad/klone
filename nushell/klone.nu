@@ -72,7 +72,7 @@ def klone_helper_extract_full_path_https [url: string klone_config: record] {
 }
 
 def klone_helper_extract_full_path_generic [url: string klone_config: record] {
-    let fqdn = $url | str replace -r "/.*" ""
+    let fqdn = $url | str replace -r "/.*" "" | str downcase
     let nu_friendly_fqdn = $fqdn | str replace -a ":" "." | str replace -a "-" "." | split row '.' | into cell-path
 
     let domain_var = $klone_config.domain_alias? | get -o $nu_friendly_fqdn
@@ -82,7 +82,7 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
         $fqdn | str replace -r "[.][^.]*$" ""
     }
 
-    let unfiltered_path = $url | str replace -r "[^/]*/" ""
+    let unfiltered_path = $url | str replace -r "[^/]*/" "" | str replace -ar "/+" "/"
 
     if ($unfiltered_path | is-empty) or ($unfiltered_path == $fqdn) {
         error make {msg: "Error: URL missing repository path."}

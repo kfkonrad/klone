@@ -83,7 +83,7 @@ function __klone_helper_extract_full_path_https
 end
 
 function __klone_helper_extract_full_path_generic
-  set fqdn (echo $argv[1] | sed 's|/.*||')
+  set fqdn (echo $argv[1] | sed 's|/.*||' | tr '[:upper:]' '[:lower:]')
   set fish_friendly_fqdn (echo $fqdn | sed 's/[.:-]/_/g')
   if set -q klone_toml_domain_alias_$fish_friendly_fqdn
     set domain (eval echo \$klone_toml_domain_alias'_'$fish_friendly_fqdn)
@@ -91,7 +91,7 @@ function __klone_helper_extract_full_path_generic
     set domain (echo $fqdn | sed 's|\.[^.]*$||')
   end
 
-  set unfiltered_path (echo $argv[1] | sed 's|[^/]*/||')
+  set unfiltered_path (echo $argv[1] | sed 's|[^/]*/||;s|/\+|/|g')
 
   if test -z "$unfiltered_path" -o "$unfiltered_path" = "$fqdn"
     echo "Error: URL missing repository path." >&2

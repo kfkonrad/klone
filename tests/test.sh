@@ -78,6 +78,12 @@ cat > "$CONFIG_DIR/config-clone-command.toml" <<'EOF'
 clone_command = "jj git clone --colocate"
 EOF
 
+# Config with empty path replacement
+cat > "$CONFIG_DIR/config-empty-replace.toml" <<'EOF'
+[path_replace]
+example.com = ["remove-this/", ""]
+EOF
+
 # Config with tilde expansion in base_dir
 cat > "$CONFIG_DIR/config-tilde.toml" <<'EOF'
 [general]

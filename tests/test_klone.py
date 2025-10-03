@@ -96,6 +96,10 @@ TEST_CASES = [
     ("klone --dry-run https://git123.company456.com/user/repo", "would clone repo to /root/workspace/git123.company456/user/repo", "", 0, "config-default.toml"),  # Numbers in domain
     ("klone --dry-run https://github.com/user/repo.backup", "would clone repo to /root/workspace/github/user/repo.backup", "", 0, "config-default.toml"),  # Path with dot (not .git)
     ("klone --dry-run https://github.com/user/repo.v2.git", "would clone repo to /root/workspace/github/user/repo.v2", "", 0, "config-default.toml"),  # Multiple dots in path
+    ("klone --dry-run https://github.com///user//repo", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # Multiple slashes
+    ("klone --dry-run https://GitHub.COM/user/repo", "would clone repo to /root/workspace/github/user/repo", "", 0, "config-default.toml"),  # Mixed case domain
+    ("klone --dry-run https://gitlab.com/org/team/subteam/project/subproject/repo", "would clone repo to /root/workspace/gitlab/org/team/subteam/project/subproject/repo", "", 0, "config-default.toml"),  # Deep path
+    ("klone --dry-run https://example.com/remove-this/repo", "would clone repo to /root/workspace/example/repo", "", 0, "config-empty-replace.toml"),  # Path replace with empty string
 ]
 
 def run_in_shell(shell, command, config_file):
