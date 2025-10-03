@@ -86,6 +86,11 @@ function __klone_helper_extract_full_path_generic
   end
 
   set unfiltered_path (echo $argv[1] | sed 's|[^/]*/||')
+
+  if test -z "$unfiltered_path" -o "$unfiltered_path" = "$fqdn"
+    echo "Error: URL missing repository path." >&2
+    return 1
+  end
   if set -q klone_toml_path_replace_$fish_friendly_fqdn"_0" && set -q klone_toml_path_replace_$fish_friendly_fqdn"_1"
     set path_filter_0 (eval echo \$klone_toml_path_replace'_'$fish_friendly_fqdn"_0")
     set path_filter_1 (eval echo \$klone_toml_path_replace'_'$fish_friendly_fqdn"_1")

@@ -79,6 +79,10 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
 
     let unfiltered_path = $url | str replace -r "[^/]*/" ""
 
+    if ($unfiltered_path | is-empty) or ($unfiltered_path == $fqdn) {
+        error make {msg: "Error: URL missing repository path."}
+    }
+
     let path_filter = $klone_config.path_replace? | get -o $nu_friendly_fqdn
 
     let filtered_path = if ($path_filter.0?) != null and ($path_filter.1?) != null {

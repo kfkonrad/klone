@@ -80,10 +80,10 @@ TEST_CASES = [
     ("klone --dry-run https://github.com/user/_repo", "would clone repo to /root/workspace/github/user/_repo", "", 0, "config-default.toml"),  # Leading underscore
     ("klone --dry-run https://github.com/user/123repo", "would clone repo to /root/workspace/github/user/123repo", "", 0, "config-default.toml"),  # Leading numbers
     ("klone --dry-run https://sub.github.com/user/repo", "would clone repo to /root/workspace/sub.github/user/repo", "", 0, "config-default.toml"),  # Subdomain
-    ("klone --dry-run git@github.com:", "", "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported.", 1, "config-default.toml"),  # Incomplete SSH URL
-    ("klone --dry-run https://", "", "Error: Invalid URL schema. Only git@, ssh://git@, and https:// URLs are supported.", 1, "config-default.toml"),  # Incomplete HTTPS URL
+    ("klone --dry-run git@github.com:", "", "Error: URL missing repository path.", 1, "config-default.toml"),  # Incomplete SSH URL
+    ("klone --dry-run https://", "", "Error: URL missing repository path.", 1, "config-default.toml"),  # Incomplete HTTPS URL
     ("klone --dry-run", "", "Error: Missing URL argument.", 1, "config-default.toml"),  # Missing URL
-    ("klone --dry-run https://github.com", "", "", 1, "config-default.toml"),  # Missing path
+    ("klone --dry-run https://github.com", "", "Error: URL missing repository path.", 1, "config-default.toml"),  # Missing path
 ]
 
 def run_in_shell(shell, command, config_file):

@@ -97,6 +97,11 @@ __klone_helper_extract_full_path_generic() {
     local unfiltered_path
     unfiltered_path=$(echo "$1" | sed 's|[^/]*/||')
 
+    if [ -z "$unfiltered_path" ] || [ "$unfiltered_path" = "$fqdn" ]; then
+        echo "Error: URL missing repository path." >&2
+        return 1
+    fi
+
     local filtered_path="$unfiltered_path"
     local path_replace_0_var="klone_toml_path_replace_${fish_friendly_fqdn}_0"
     local path_replace_1_var="klone_toml_path_replace_${fish_friendly_fqdn}_1"
