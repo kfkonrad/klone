@@ -74,7 +74,7 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
     let domain = if $domain_var != null {
         $domain_var
     } else {
-        $fqdn | str replace -r "[.].*$" ""
+        $fqdn | str replace -r "[.][^.]*$" ""
     }
 
     let unfiltered_path = $url | str replace -r "[^/]*/" ""

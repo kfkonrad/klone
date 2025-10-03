@@ -91,7 +91,7 @@ __klone_helper_extract_full_path_generic() {
     if [[ -n "${!domain_var+x}" ]]; then
         domain="${!domain_var}"
     else
-        domain=$(echo "$fqdn" | sed 's|\..*$||')
+        domain=$(echo "$fqdn" | sed 's|\.[^.]*$||')
     fi
 
     local unfiltered_path

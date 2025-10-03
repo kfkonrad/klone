@@ -95,7 +95,7 @@ __klone_helper_extract_full_path_generic() {
     if [[ -n ${(P)domain_var+x} ]]; then
         domain=${(P)domain_var}
     else
-        domain=${fqdn%%.*}
+        domain=${fqdn%.*}
     fi
 
     local unfiltered_path

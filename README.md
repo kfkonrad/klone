@@ -128,8 +128,15 @@ This section has three keys and changes the behavior of `klone` for all URLs:
 ### `[domain_alias]`
 
 In `[domain_alias]` you can alias domains to arbitrary strings. This allows you to change the part of the repo's path
-that's calculated from the URL. By default this is the first part of the FQDN up until the first dot, e.g. `github.com`
--> `github` or `foo.example.com` -> foo.
+that's calculated from the URL. By default the domain is extracted by removing the TLD (last part after the final dot):
+
+- `github.com` → `github`
+- `gitlab.org` → `gitlab`
+- `git.company.com` → `git.company`
+- `gitlab.company.co.uk` → `gitlab.company.co` (note: TLDs with dots in them (like `.co.uk`) are not treated specially,
+  resulting in the `.co` suffix in this example)
+
+This ensures subdomains are preserved, avoiding path collisions between different hosting instances.
 
 The format for this is `<domain> = "my-alias"`.
 

@@ -82,7 +82,7 @@ function __klone_helper_extract_full_path_generic
   if set -q klone_toml_domain_alias_$fish_friendly_fqdn
     set domain (eval echo \$klone_toml_domain_alias'_'$fish_friendly_fqdn)
   else
-    set domain (echo $fqdn | sed 's|\..*$||')
+    set domain (echo $fqdn | sed 's|\.[^.]*$||')
   end
 
   set unfiltered_path (echo $argv[1] | sed 's|[^/]*/||')
