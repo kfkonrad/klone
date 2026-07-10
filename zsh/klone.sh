@@ -200,3 +200,15 @@ __klone_helper_parse_array() {
         export "${storage_key}_1=${match[2]}"
     fi
 }
+
+# ZSH completion for klone
+function _klone() {
+    local curcontext="$curcontext" state line
+    typeset -A opt_args
+
+    _arguments \
+        '(-n --dry-run)'{-n,--dry-run}'[Show what would happen without cloning]' \
+        '*:url:_urls'
+}
+
+compdef _klone klone

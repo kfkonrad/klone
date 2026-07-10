@@ -201,3 +201,21 @@ __klone_helper_parse_array() {
         export "${storage_key}_1=${BASH_REMATCH[2]}"
     fi
 }
+
+# Bash completion for klone
+_klone_complete() {
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--dry-run -n"
+
+    case "${cur}" in
+        -*)
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+    esac
+}
+
+complete -F _klone_complete klone
