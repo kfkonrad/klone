@@ -22,8 +22,8 @@ behavior is configurable, see [Usage](#usage) for more.
 There are four implementations of `klone` with an identical feature set for Fish, Bash, ZSH and Nushell. All
 implementations come _with_ completions.
 
-### Fish
-
+<details>
+  <summary>Install <code>klone</code> in Fish</summary>
 This repo is an oh my fish and fisher compatible plugin repo.
 
 To install `klone` with oh my fish run:
@@ -38,8 +38,10 @@ To install `klone` with fisher run:
 fisher install kfkonrad/klone
 ```
 
-### Bash
+</details>
 
+<details>
+  <summary>Install <code>klone</code> in Bash</summary>
 To install `klone` you can download
 [bash/klone.sh](https://github.com/kfkonrad/klone/blob/main/bash/klone.sh) and source it in your `.bashrc`. Below are
 examples for installing the script using `curl` and `wget` for added convenience:
@@ -60,7 +62,10 @@ wget https://raw.githubusercontent.com/kfkonrad/klone/main/bash/klone.sh -qO ~/.
 echo 'source ~/.config/klone/klone.sh' >> ~/.bashrc
 ```
 
-### ZSH
+</details>
+
+<details>
+  <summary>Install <code>klone</code> in ZSH</summary>
 
 To install `klone` you can download
 [zsh/klone.sh](https://github.com/kfkonrad/klone/blob/main/zsh/klone.sh) and source it in your `.zshrc`. Below are
@@ -82,7 +87,10 @@ wget https://raw.githubusercontent.com/kfkonrad/klone/main/zsh/klone.sh -qO ~/.c
 echo 'source ~/.config/klone/klone.sh' >> ~/.zshrc
 ```
 
-### Nushell
+</details>
+
+<details>
+  <summary>Install <code>klone</code> in Nushell</summary>
 
 To install `klone` you can download
 [nushell/klone.sh](https://github.com/kfkonrad/klone/blob/main/nushell/klone.sh) and source it in your `config.nu`.
@@ -103,6 +111,8 @@ mkdir ~/.config/klone
 wget https://raw.githubusercontent.com/kfkonrad/klone/main/nushell/klone.nu -qO ~/.config/klone/klone.nu
 "\nsource ~/.config/klone/klone.nu\n" o>> $nu.config-path
 ```
+
+</details>
 
 ## Usage
 
