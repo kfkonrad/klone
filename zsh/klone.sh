@@ -211,4 +211,6 @@ function _klone() {
         '*:url:_urls'
 }
 
-compdef _klone klone
+if [[ -o interactive ]]; then
+    compdef _klone klone
+fi
