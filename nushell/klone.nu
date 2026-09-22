@@ -24,11 +24,16 @@ def --env klone [url: string, --dry-run (-n)] {
     }
 }
 
+# $nu.home-path was renamed to $nu.home-dir in newer Nushell versions; support both
+def klone_helper_home [] {
+    $nu.home-dir? | default $nu.home-path?
+}
+
 def klone_helper_toml_file [] {
     if ($env.KLONE_CONFIG? != null) and (($env.KLONE_CONFIG | path exists)) {
         $env.KLONE_CONFIG
-    } else if ($"($nu.home-path)/.config/klone/config.toml" | path exists) {
-        $"($nu.home-path)/.config/klone/config.toml"
+    } else if ($"(klone_helper_home)/.config/klone/config.toml" | path exists) {
+        $"(klone_helper_home)/.config/klone/config.toml"
     } else {
         ""
     }
@@ -72,7 +77,7 @@ def klone_helper_extract_full_path_https [url: string klone_config: record] {
 }
 
 def klone_helper_extract_full_path_generic [url: string klone_config: record] {
-    let fqdn = $url | str replace -r "/.*" "" | str downcase
+    let fqdn = $url | str replace -r "/.*" "" | str lowercase
     let nu_friendly_fqdn = $fqdn | str replace -a ":" "." | str replace -a "-" "." | split row '.' | into cell-path
 
     let domain_var = $klone_config.domain_alias? | get -o $nu_friendly_fqdn
@@ -101,9 +106,9 @@ def klone_helper_extract_full_path_generic [url: string klone_config: record] {
     }
 
     let base_dir = if ($klone_config.general?.base_dir? != null) {
-        $klone_config.general.base_dir | str replace -r "^~/" $"($nu.home-path)/"
+        $klone_config.general.base_dir | str replace -r "^~/" $"(klone_helper_home)/"
     } else {
-        $"($nu.home-path)/workspace"
+        $"(klone_helper_home)/workspace"
     }
 
     $"($base_dir)/($domain)/($filtered_path)"
